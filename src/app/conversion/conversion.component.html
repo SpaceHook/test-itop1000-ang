@@ -1,0 +1,46 @@
+<div class="conversion">
+  <div class="conversion__from">
+    <input
+      type="text"
+      class="conversion__field"
+      [value]="amountFrom"
+      (keyup)="onKeyFrom($event)"
+    >
+    <div class="select">
+      <select class="conversion__select" (change)="onChangeFrom($event)">
+        <option
+          class="conversion__option"
+          *ngFor="let currency of currencies"
+          [value]="currency[0]"
+          [selected]="currency[0] === currencyFrom"
+        >
+          {{currency[0]}}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="conversion__to">
+    <input
+      type="text"
+      class="conversion__field"
+      [value]="amountTo"
+      (keyup)="onKeyTo($event)"
+    >
+    <div class="select">
+      <select
+        class="conversion__select"
+        (change)="onChangeTo($event)"
+      >
+        <option 
+          class="conversion__option"
+          *ngFor="let currency of currencies"
+          [value]="currency[0]" 
+          [selected]="currency[0] === currencyTo"
+        >
+          {{currency[0]}}
+        </option>
+      </select>
+    </div>
+  </div>
+</div>

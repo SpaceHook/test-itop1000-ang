@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -8,13 +9,10 @@ import { Component, OnInit } from '@angular/core';
 export class AppComponent implements OnInit {
   currencies: any[] = [];
 
-  getCurrencies() {
-    return fetch('https://openexchangerates.org/api/latest.json?app_id=ac592b2489b641c8a2c05fa1403616bf')
-    .then(res => res.json())
-    .then(data => this.currencies = Object.entries(data.rates));
-  }
+  constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.getCurrencies();
+    this.http.get<any>('https://openexchangerates.org/api/latest.json?app_id=ac592b2489b641c8a2c05fa1403616bf')
+    .subscribe(data => this.currencies = Object.entries(data.rates));
   }
 }

@@ -8,22 +8,16 @@ import { formatCurrency, getCurrency } from 'src/funcrions/functions';
 })
 
 export class HeaderComponent implements OnChanges {
-  @Input() currencies: string[] = [];
+  @Input() currencies: [string, number][] = [];
 
   usd: number = 0;
   eur: number = 0;
 
   ngOnChanges() {
-    const findUsd = getCurrency(this.currencies, 'USD');
     const findEur = getCurrency(this.currencies, 'EUR');
     const findUah = getCurrency(this.currencies, 'UAH');
-    
-    if (findUsd) {
-      this.usd = formatCurrency(findUah[1]);
-    }
 
-    if (findEur) {
-      this.eur = formatCurrency(findUah[1] / findEur[1]);
-    }
+    this.usd = formatCurrency(findUah);
+    this.eur = formatCurrency(findUah / findEur);
   }
 }

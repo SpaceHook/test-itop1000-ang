@@ -1,5 +1,11 @@
 export function getCurrency(currencies: any[], wantedCurrency: string) {
-  return currencies.find(currency => currency[0] === wantedCurrency)
+  const foundCurrency = currencies.find(currency => currency[0] === wantedCurrency);
+
+  if (!foundCurrency) {
+    return;
+  }
+
+  return foundCurrency[1];
 };
 
 export function formatCurrency(currency: number) {

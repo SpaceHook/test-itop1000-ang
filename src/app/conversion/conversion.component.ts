@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { formatCurrency, getCurrency } from 'src/funcrions/functions';
 
 @Component({
@@ -6,45 +6,55 @@ import { formatCurrency, getCurrency } from 'src/funcrions/functions';
   templateUrl: './conversion.component.html',
   styleUrls: ['./conversion.component.scss']
 })
-export class ConversionComponent {
-  @Input() currencies: string[] = [];
+export class ConversionComponent implements OnInit, OnChanges {
+  @Input() currencies: [string, number][] = [];
+  @Input() currencyFrom: string = '';
+  @Input() currencyTo: string = '';
+
+  @Output() currencyFromChange = new EventEmitter();
+  @Output() currencyToChange = new EventEmitter();
 
   amountFrom: number = 0;
   amountTo: number = 0;
-  currencyFrom: string = 'USD';
-  currencyTo: string = 'UAH';
+
+  firstCurrency: number = 0;
+  secondCurrency: number = 0;
 
   onKeyFrom(event: any) {
-    const firstCurrency = getCurrency(this.currencies, this.currencyFrom)[1];
-    const secondCurrency = getCurrency(this.currencies, this.currencyTo)[1];
-    
-    this.amountTo = formatCurrency(event.target.value * secondCurrency / firstCurrency);
+    this.amountTo = formatCurrency(event.target.value * this.secondCurrency / this.firstCurrency);
     this.amountFrom = event.target.value;
   }
 
   onChangeFrom(event: any) {   
-    this.currencyFrom = event.target.value;
-  
-    const firstCurrency = getCurrency(this.currencies, this.currencyFrom)[1];
-    const secondCurrency = getCurrency(this.currencies, this.currencyTo)[1];
-    
-    this.amountTo = formatCurrency(this.amountFrom * secondCurrency / firstCurrency);
+    this.currencyFromChange.emit(event.target.value);
+    this.amountTo = formatCurrency(this.amountFrom * this.secondCurrency / this.firstCurrency);
   }
 
   onKeyTo(event: any) {
-    const firstCurrency = getCurrency(this.currencies, this.currencyFrom)[1];
-    const secondCurrency = getCurrency(this.currencies, this.currencyTo)[1];
-    
-    this.amountFrom = formatCurrency(event.target.value * firstCurrency / secondCurrency);
+    this.amountFrom = formatCurrency(event.target.value * this.firstCurrency / this.secondCurrency);
     this.amountTo = event.target.value;
   }
 
   onChangeTo(event: any) {
-    this.currencyTo = event.target.value;
+    this.currencyToChange.emit(event.target.value);  
+    this.amountFrom = formatCurrency(this.amountTo * this.firstCurrency / this.secondCurrency); 
+  }
 
-    const firstCurrency = getCurrency(this.currencies, this.currencyFrom)[1];
-    const secondCurrency = getCurrency(this.currencies, this.currencyTo)[1];
-    
-    this.amountFrom = formatCurrency(this.amountTo * firstCurrency / secondCurrency); 
+  ngOnInit() {
+    this.amountFrom = 0;
+    this.amountTo = 0;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.firstCurrency = getCurrency(this.currencies, this.currencyFrom);
+    this.secondCurrency = getCurrency(this.currencies, this.currencyTo);
+
+    if ('currencyFrom' in changes) {
+      this.amountTo = formatCurrency(this.amountFrom * this.secondCurrency / this.firstCurrency);
+    }
+
+    if ('currencyTo' in changes) {
+      this.amountFrom = formatCurrency(this.amountTo * this.firstCurrency / this.secondCurrency); 
+    }
   }
 }

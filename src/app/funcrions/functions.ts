@@ -8,6 +8,6 @@ export function getCurrency(currencies: any[], wantedCurrency: string) {
   return foundCurrency[1];
 };
 
-export function formatCurrency(currency: number) {
-  return Math.floor(currency * 100) / 100;
+export function formatCurrency(value: number, dividedCurrency: number, multiCurrency: number,) {
+  return Math.floor(value * multiCurrency / dividedCurrency * 100) / 100;
 }

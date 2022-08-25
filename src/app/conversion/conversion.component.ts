@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { formatCurrency, getCurrency } from 'src/funcrions/functions';
+import { formatCurrency, getCurrency } from 'src/app/funcrions/functions';
 
 @Component({
   selector: 'app-conversion',
@@ -20,26 +20,6 @@ export class ConversionComponent implements OnInit, OnChanges {
   firstCurrency: number = 0;
   secondCurrency: number = 0;
 
-  onKeyFrom(event: any) {
-    this.amountTo = formatCurrency(event.target.value * this.secondCurrency / this.firstCurrency);
-    this.amountFrom = event.target.value;
-  }
-
-  onChangeFrom(event: any) {   
-    this.currencyFromChange.emit(event.target.value);
-    this.amountTo = formatCurrency(this.amountFrom * this.secondCurrency / this.firstCurrency);
-  }
-
-  onKeyTo(event: any) {
-    this.amountFrom = formatCurrency(event.target.value * this.firstCurrency / this.secondCurrency);
-    this.amountTo = event.target.value;
-  }
-
-  onChangeTo(event: any) {
-    this.currencyToChange.emit(event.target.value);  
-    this.amountFrom = formatCurrency(this.amountTo * this.firstCurrency / this.secondCurrency); 
-  }
-
   ngOnInit() {
     this.amountFrom = 0;
     this.amountTo = 0;
@@ -50,11 +30,29 @@ export class ConversionComponent implements OnInit, OnChanges {
     this.secondCurrency = getCurrency(this.currencies, this.currencyTo);
 
     if ('currencyFrom' in changes) {
-      this.amountTo = formatCurrency(this.amountFrom * this.secondCurrency / this.firstCurrency);
+      this.amountTo = formatCurrency(this.amountFrom, this.firstCurrency, this.secondCurrency);
     }
 
     if ('currencyTo' in changes) {
-      this.amountFrom = formatCurrency(this.amountTo * this.firstCurrency / this.secondCurrency); 
+      this.amountFrom = formatCurrency(this.amountTo, this.secondCurrency, this.firstCurrency);
     }
+  }
+
+  onKeyFrom(event: any) {
+    this.amountTo = formatCurrency(event.target.value, this.firstCurrency, this.secondCurrency);
+    this.amountFrom = event.target.value;
+  }
+
+  onChangeFrom(event: any) {   
+    this.currencyFromChange.emit(event.target.value);
+  }
+
+  onKeyTo(event: any) {
+    this.amountFrom = formatCurrency(event.target.value, this.secondCurrency, this.firstCurrency); 
+    this.amountTo = event.target.value;
+  }
+
+  onChangeTo(event: any) {
+    this.currencyToChange.emit(event.target.value);  
   }
 }

@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { formatCurrency, getCurrency } from 'src/funcrions/functions';
+import { formatCurrency, getCurrency } from 'src/app/funcrions/functions';
 
 @Component({
   selector: 'app-header',
@@ -17,7 +17,7 @@ export class HeaderComponent implements OnChanges {
     const findEur = getCurrency(this.currencies, 'EUR');
     const findUah = getCurrency(this.currencies, 'UAH');
 
-    this.usd = formatCurrency(findUah);
-    this.eur = formatCurrency(findUah / findEur);
+    this.usd = Math.floor(findUah * 100) / 100;
+    this.eur = Math.floor(findUah / findEur * 100) / 100;
   }
 }

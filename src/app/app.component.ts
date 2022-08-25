@@ -1,6 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { Url } from 'src/types/Url';
+import { CurrenciesService } from './services/currencies.service';
 
 @Component({
   selector: 'app-root',
@@ -12,10 +11,10 @@ export class AppComponent implements OnInit {
   currencyFrom: string = 'USD';
   currencyTo: string = 'UAH';
 
-  constructor(private http: HttpClient) {}
+  constructor(private currenciesService: CurrenciesService) {}
 
   ngOnInit(): void {
-    this.http.get<Url>('https://openexchangerates.org/api/latest.json?app_id=ac592b2489b641c8a2c05fa1403616bf')
-    .subscribe(data => this.currencies = Object.entries(data.rates));
+    this.currenciesService.getCurrencies()
+      .subscribe(data => this.currencies = Object.entries(data.rates));
   }
 }
